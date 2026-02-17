@@ -3,10 +3,12 @@ from discord.ext import commands
 import logging
 from dotenv import load_dotenv
 import os
-import webServer_keepAlive
+import webServer_keepAlive as keep_alive
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
+
+keep_alive()
 
 handler = logging.FileHandler(filename = 'discord.log', encoding = 'utf-8', mode = 'w')
 
