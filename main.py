@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 import logging
 from dotenv import load_dotenv
 import os
@@ -15,9 +16,9 @@ handler = logging.FileHandler(filename = 'discord.log', encoding = 'utf-8', mode
 intents = discord.Intents.default()
 intents.members = True
 intents.messages= True                                                                                                  # intent enabled to detect messages in the specific channel
-                                                                                            # initialized to use 'on_guild_join(guild)' for when the bot has been added to a server
 
-bot = commands.Bot(command_prefix='/', intents=intents) # indicates how to 'call on'/reference the bot using which prefix - !, #, / or anything else, can also be multiple keywords
+
+bot = commands.Bot(command_prefix="!", intents=intents) # indicates how to 'call on'/reference the bot using which prefix - !, #, / or anything else, can also be multiple keywords
 
 
 @bot.event # a python decorator
@@ -31,9 +32,12 @@ async def on_ready(): # because this uses the async/await notation, we require t
 #     except Exception as e:
 #         await ctx.send(e)
 
-@bot.command()
-async def hello(ctx):
-    await ctx.send(f"Hello, I am {bot.user.name}")
+@bot.tree.command(name="hello_world1", description="says hello!") # how to create a slash command: referring to object created (bot) and then referring to tree and the objects attributes
+async def hello(ctx, interaction : discord.Interaction):
+    try:
+        await interaction.response.send_message(f"Hello, I am {bot.user.name}")
+    except Exception as e:
+        await ctx.send("Exception:",e)
 
 @bot.event
 async def on_message(message):
