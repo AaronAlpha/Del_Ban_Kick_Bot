@@ -32,7 +32,9 @@ async def on_ready(): # because this uses the async/await notation, we require t
 #     except Exception as e:
 #         await ctx.send(e)
 
-@bot.tree.command(name="hello_world1", description="says hello!") # how to create a slash command: referring to object created (bot) and then referring to tree and the objects attributes
+
+GUILD_ID = discord.Object(id=1340817807922696318)
+@bot.tree.command(name="hello_world1", description="says hello!", guild=GUILD_ID) # how to create a slash command: referring to object created (bot) and then referring to tree and the objects attributes
 async def hello(ctx, interaction : discord.Interaction):
     try:
         await interaction.response.send_message(f"Hello, I am {bot.user.name}")
