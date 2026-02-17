@@ -32,14 +32,14 @@ async def on_ready(): # because this uses the async/await notation, we require t
 #     except Exception as e:
 #         await ctx.send(e)
 
-
-GUILD_ID = discord.Object(id=1340817807922696318)
-@bot.tree.command(name="hello_world1", description="says hello!", guild=GUILD_ID) # how to create a slash command: referring to object created (bot) and then referring to tree and the objects attributes
-async def hello(ctx, interaction : discord.Interaction):
-    try:
-        await interaction.response.send_message(f"Hello, I am {bot.user.name}")
-    except Exception as e:
-        await ctx.send("Exception:",e)
+#
+# GUILD_ID = discord.Object(id=)
+# @bot.tree.command(name="hello_world1", description="says hello!", guild=GUILD_ID) # how to create a slash command: referring to object created (bot) and then referring to tree and the objects attributes
+# async def hello(ctx, interaction : discord.Interaction):
+#     try:
+#         await interaction.response.send_message(f"Hello, I am {bot.user.name}")
+#     except Exception as e:
+#         await ctx.send("Exception:",e)
 
 @bot.event
 async def on_message(message):
@@ -47,7 +47,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if message.channel.id == 1465197237092225197:
+    if message.channel.id == 1462869214233755730:
         print(message.author) # prints out the author of the message
 
         # catching errors
