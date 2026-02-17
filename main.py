@@ -31,6 +31,10 @@ async def on_ready(): # because this uses the async/await notation, we require t
 #     except Exception as e:
 #         await ctx.send(e)
 
+@bot.command()
+async def hello(ctx):
+    await ctx.send(f"Hello, I am {bot.user.name}")
+
 @bot.event
 async def on_message(message):
 
