@@ -19,9 +19,9 @@ Bot uses '**Render**' as the hosting service and '**UptimeRobot**' monitoring se
 -  to run Bot 24/7 (for FREE), used 'Render' Hosting : **https://render.com/**                                                                                                                    (**hosting** service used)
 -  to keep Bot running indefinetely (fixing bot downtime), used [UptimeRobot](https://uptimerobot.com/) Monitoring -  public facing status page : **https://stats.uptimerobot.com/p7rgqtuuY6**    (**monitoring** service used)
 -  tutorial vids:
-  1. ["Host your app 24/7 with Render (Free and Unstable)"-"Gunther"](https://www.youtube.com/watch?v=FVpEDSlGG5k)      (was primary use for setting up the hosting)
-  2. ["Host Your Discord Bot For Free In 2024! (Render)"-"Max Codez"](https://www.youtube.com/watch?v=HZis54wRF98)      (was 1 of 2 used for code)
-  3. ["How to Host Your Discord Bot for FREE \[Python\]"-"CreepyD"](https://www.youtube.com/watch?v=kBdDmCPcbfs)        (was 1 of 2 used for code)                                            (thingy-mah-jig)
+    1. ["Host your app 24/7 with Render (Free and Unstable)"-"Gunther"](https://www.youtube.com/watch?v=FVpEDSlGG5k)      (was primary use for setting up the hosting)
+    2. ["Host Your Discord Bot For Free In 2024! (Render)"-"Max Codez"](https://www.youtube.com/watch?v=HZis54wRF98)      (was 1 of 2 used for code)
+    3. ["How to Host Your Discord Bot for FREE \[Python\]"-"CreepyD"](https://www.youtube.com/watch?v=kBdDmCPcbfs)        (was 1 of 2 used for code)                                            (thingy-mah-jig)
 ### Ackowledgment of use of ChatGPT
 I would like to say that I don't 'like' ChatGPT for cases of breach of Academic Inegrity or misrepresentaiton of work conducted by an individual. 
 However, in development of this bot, there were moments where the Documentation and Tutorial Videos were: irrelevant; not enough; vague; unclear on how to use certain code; and many other related feelings of helplessness. 
