@@ -30,8 +30,8 @@ I would like to say that I don't 'like' ChatGPT for cases of breach of Academic 
 
 However, in development of this bot, there were moments where the Documentation and Tutorial Videos were: irrelevant; not enough; vague; unclear on how to use certain code; and many other related feelings of helplessness. 
 
-Thus, to help myself _finish_ the code rather than be _not finish the code_ and be zero-tolerant-AI-usage: there were moments where I copy-pasted MY code onto ChatGPT and asked about the correctness of the code and/or why it was incorrect, and solutions to it.
+Thus, to help myself **_finish_** the code rather than being with **_unfinished code_** and being zero-tolerant-to-AI-usage: there were moments where I copy-pasted MY code onto ChatGPT and asked about the correctness of the code and/or why it was incorrect, and solutions to it.
 
-I would've used the solution ideas/code **segments** provided by ChatGPT (and Google's automatically generated AI), BUT **did not prompt and use generated code from ChatGPT or any other AI model**
+I would've used the solution ideas/code **segments** provided by ChatGPT (and Google's automatically generated AI), BUT I **did not prompt and use generated code from ChatGPT or any other AI model**
 
 Thank you.
