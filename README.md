@@ -1,4 +1,4 @@
-# Del_Ban_Kick_Bot
+# Del_Ban_Kick_Bot - IS BROKEN AND IN DEV SINCE START OF MARCH (althought commit is end of March)
 ## Purposes
 Bot designed to delete, ban and kick a user (intentionally designed for Bot-Spammers) after a message has been sent into a specific channel of choice (ban-channel for eg).
 
