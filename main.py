@@ -60,6 +60,9 @@ async def on_message(message):
         # refers to func kick_ban_Member to carry out the ban and kick process in that order
         await ban_kick_Member(message.author, message.channel)  # listens and triggers the event kick
 
+    await bot.process_commands(message) # require to allow for future processing of messages
+
+
 
 async def ban_kick_Member(member: discord.Member, channel):
 
