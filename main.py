@@ -59,15 +59,21 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
+    if discord.Channel
+
     strArr = message.content.split() # splits string at " "
     # incoming message is now an arr of ["word", "word", "word"...]
 
-    if discord.Message.mention_everyone and ("@everyone" in message.content.lower()):
-      mentionedBool = True # switches on the "switch" that checks if message was @everyone'd
-      print("@everyone check " + discord.Message.channel)
+    try:
 
-    print(discord.Message.attachments)
+      if discord.Message.mention_everyone and ("@everyone" in message.content.lower()):
+        mentionedBool = True # switches on the "switch" that checks if message was @everyone'd
+        print("@everyone check " + discord.Message.channel)
 
+      print(discord.Message.attachments)
+
+    except Exception as e:
+      print(e)
 
     # for i in strArr:
     #     i.lower().strip()
