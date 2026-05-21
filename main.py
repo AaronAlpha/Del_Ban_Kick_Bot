@@ -15,22 +15,10 @@ handler = logging.FileHandler(filename = 'discord.log', encoding = 'utf-8', mode
 
 intents = discord.Intents.default()
 intents.members = True
-intents.messages= True                                                                                                 # intent enabled to detect messages in the specific channel
-# intents.message_content = True
+intents.messages= True                                                                                                  # intent enabled to detect messages in the specific channel
+
 
 bot = commands.Bot(command_prefix="!", intents=intents) # indicates how to 'call on'/reference the bot using which prefix - !, #, / or anything else, can also be multiple keywords
-
-"""
-form: [count, [parsed phrase]]
-
-[3, ["just", "upgraded", "!"] ], # will use a count of >=2, main phrase is first 2 words
-[6, ["giving", "away", "my", "old", "canon", "camera", "."] ], # will use a count of >=4, main phrase is first 4 words
-"it's", "still", "functional", "and", "in", "good", "shape", "."] ] ,
-"perfect for photography enthusiasts or anyone wanting to start!
-"dm me if interested in picking it up."
-"""
-
-mentionedBool = False # bool to check if the @everyone command was used
 
 
 @bot.event # a python decorator
@@ -59,49 +47,28 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
+    if message.channel.id == 1462869214233755730:
+        print(message.author) # prints out the author of the message
 
-    strArr = message.content.split() # splits string at " "
-    # incoming message is now an arr of ["word", "word", "word"...]
+        # catching errors
+        try:
+            await message.delete()                                                                                      # deleting the author's message
+            # await message.channel.send(f"{message.author.mention} - The bot's message has been deleted!")             # optional statement that will be printed to the screen after deleting the message
+        except Exception as e:
+            print(f"Exception: {e}")
 
-    print("message in this channel")
+        # refers to func kick_ban_Member to carry out the ban and kick process in that order
+        await ban_kick_Member(message.author, message.channel)  # listens and triggers the event kick
 
-    try:
+    await bot.process_commands(message) # require to allow for future processing of messages
 
-      if discord.Message.mention_everyone and ("@everyone" in message.content):
-        mentionedBool = True # switches on the "switch" that checks if message was @everyone'd
-        print("@everyone check " + discord.Message.channel)
-
-      print(discord.Message.attachments)
-
-    except Exception as e:
-      print(e)
-
-    # for i in strArr:
-    #     i.lower().strip()
-    #     # making all characters lowercase and then stripping leading and trailing whitespace
-    #
-    # for phrase in banned_phrases:
-    #     if phrase in message.content:
-    #         print(message.author) # prints out the author of the message
-    #
-    #         # catching errors
-    #         try:
-    #             await message.delete()                                                                                      # deleting the author's message
-    #             # await message.channel.send(f"{message.author.mention} - The bot's message has been deleted!")             # optional statement that will be printed to the screen after deleting the message
-    #         except Exception as e:
-    #             print(f"Exception: {e}")
-    #
-    #         # refers to func kick_ban_Member to carry out the ban and kick process in that order
-    #         await ban_kick_Member(message.author, message.channel)  # listens and triggers the event kick
-
-    await bot.process_commands(message) # what is this used for?
 
 
 async def ban_kick_Member(member: discord.Member, channel):
 
     # catching errors
     try:
-        await member.ban(reason="Bot!")                                                                                 # bans said member
+        await member.ban(reason="Bot!")                                                                               # bans said member
         await member.kick(reason="Bot!")                                                                                # kicks said member
         await channel.send(f"{member.mention} was a bot and was thus BANNED and KICKED by {bot.user.name} the great! FEAR ME, RAHH!") # sending message of the kick and ban of said member
 
@@ -109,5 +76,3 @@ async def ban_kick_Member(member: discord.Member, channel):
         await channel.send(f"The Exception captured was: {e}\n'@CompE Club Exec' for tech_Support")
 
 bot.run(token, log_handler = handler, log_level = logging.DEBUG)
-
-
