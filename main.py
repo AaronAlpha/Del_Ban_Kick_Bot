@@ -63,9 +63,11 @@ async def on_message(message):
     strArr = message.content.split() # splits string at " "
     # incoming message is now an arr of ["word", "word", "word"...]
 
+    print("message in this channel")
+
     try:
 
-      if discord.Message.mention_everyone and ("@everyone" in message.content.lower()):
+      if discord.Message.mention_everyone and ("@everyone" in message.content):
         mentionedBool = True # switches on the "switch" that checks if message was @everyone'd
         print("@everyone check " + discord.Message.channel)
 
