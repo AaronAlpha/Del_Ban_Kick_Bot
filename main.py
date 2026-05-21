@@ -16,7 +16,7 @@ handler = logging.FileHandler(filename = 'discord.log', encoding = 'utf-8', mode
 intents = discord.Intents.default()
 intents.members = True
 intents.messages= True                                                                                                 # intent enabled to detect messages in the specific channel
-intents.message_content = True
+# intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents) # indicates how to 'call on'/reference the bot using which prefix - !, #, / or anything else, can also be multiple keywords
 
