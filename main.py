@@ -59,7 +59,6 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if discord.Channel
 
     strArr = message.content.split() # splits string at " "
     # incoming message is now an arr of ["word", "word", "word"...]
