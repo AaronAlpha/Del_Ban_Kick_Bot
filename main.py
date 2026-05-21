@@ -64,7 +64,7 @@ async def on_message(message):
 
     if discord.Message.mention_everyone and ("@everyone" in message.content.lower()):
       mentionedBool = True # switches on the "switch" that checks if message was @everyone'd
-      print("@everyone check")
+      print("@everyone check " + discord.Message.channel)
 
     print(discord.Message.attachments)
 
