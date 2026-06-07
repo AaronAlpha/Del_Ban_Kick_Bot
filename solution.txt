@@ -1,0 +1,136 @@
+import asyncio
+
+import discord
+from discord import guild
+from discord.ext import commands # commands from discord extensions
+from discord import app_commands # this and above line required to write slash commands
+
+import logging
+from dotenv import load_dotenv # this statement is used to allow to import our Discord Token (Private Key) from our .env file
+import os
+
+load_dotenv() # loads token from environment variable file (.env)
+token = os.getenv('DISCORD_TOKEN') # getting out Discord Token from the .env file
+
+logging_handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w') # creating a file that will handle logging (name=discord.log; mode=write[w])
+
+
+# setting up the intents that bot
+intents = discord.Intents.none() # creates an "Intents" instance (class obj, where "Intents" is the class, "discord" is the module - "none()" is the class method for "Intents") - no intents set
+# specifying manual intents; refer "https://discordpy.readthedocs.io/en/stable/api.html?highlight=intents#intents" for all Intents-class attributes (attr) and methods
+intents.bans = True # allowing for Member properties (attr and methods); analogous to intents.moderation = True
+intents.messages = True
+intents.message_content = True # reading message content
+intents.members = True
+intents.reactions = True # allowing for a Bot reacting to a reaction placed on a message in that channel
+
+
+
+# this is another way of creating a bot instance - the Bot-command creation process is a subclass of the discord.Client class
+
+# Note: when developing slash commands, need to inherit from "commands.Bot" instead of "discord.Client"
+class Client(commands.Bot):
+
+# creating the discord application, by inheriting from "discord.Client" (which is the notation for inheritance
+# Regular class notation is as such: "class myClass:" with no parentheses. I.e. parentheses is only used for inheritance
+# class Client(discord.Client):
+  async def on_ready(self):
+    print(f"Logged in as: '{self.user}'")
+
+    # to utilize our slash commands, we have to do the "synced" line, where we force our slash commands to forcibly sync and show up
+    try:
+      guild = discord.Object(id=1511153803909398538)
+      synced = await self.tree.sync(guild=GUILD_ID)
+      print(f"Synced {len(synced)} commands to guild {guild.id}") # way to check if the "synced" var was successful
+      # by printing a number (in the terminal) of all the possible slash commands written for the bot so the specific server being developed for
+
+    except Exception as e:
+      print(f"Whoops, error syncing commands: {e}")
+
+
+  async def on_message(self, message):
+    if message.author == self.user: # to avoid the case where the bot replies to itself
+      return
+
+    # if message.content.startswith('@everyone'): # hits if the message starts with "hello"
+    if "@everyone" in message.content: # this does the same as the above line
+      await message.channel.send(f"Hi there {message.author.mention}")
+
+    await self.process_commands() # required! when overriding the on_message() method to process further commands
+
+# Note: if the bot stops running (after script is terminated); then rerun and then perform a reaction on a msg (which was sent before the bot was terminated), the bot will
+# not respond to the reaction as described below. It will only respond to msgs that have been reacted to after the bot is run again (the script is rerun)
+# most likely to do with caches etc
+  async def on_reaction_add(self, reaction, user): # response if someone reacts to a msg
+    # Note: "Intents.reactions = True" for ANY "Reactions" event
+      await reaction.message.channel.send("You reacted")
+
+client = Client(command_prefix="$", intents=intents) # where the command prefix represents how to interact with a bot
+
+
+# creating slash commands below (created outside the scope of the class inheriting from discord.Client
+# slash commands may also be known as "context menu"s, due to the GUI "menu" that appears when "/" is inserted in the text box of discord (my intuition, not confirmed thru a source)
+
+GUILD_ID = discord.Object(id=1511153803909398538)
+
+# this is how to create slash commands; referring to the obj "clientCommands" created above; and then referring to the tree and the attr "command"
+@client.tree.command(name="was_good", description="Say Hello!", guild=GUILD_ID)
+async def was_good(interaction : discord.Interaction):
+# Note: the "name=" of the decorator is the slash command name; the function name defining the slash command has no effect on, besides being a function name - good practice can be to have the decorator param "name=" and function name be the same for uniformity
+
+  await interaction.response.send_message("Was good!?") # says: wherever this interaction was; respond to this interaction by sending a message
+  # or: respond to wherever this slash command was called
+
+  # Note: slash commands *respond* once through the param of type "discord.Interaction"
+  # convention may be to use "ctx" (context) which refers to wherever the interaction occurred
+  # however, the first param of a slash command is type=discord.Interaction, so using a param name of "interaction" or similar may be human-readable
+
+
+# additionally, discord.Context is a separate class, with a classmethod "await from_interaction" (https://discordpy.readthedocs.io/en/stable/ext/commands/api.html#discord.ext.commands.Context.from_interaction)
+# but just use the discord.Interactions type for the above ; don't know how to use the above classmethod
+# (discord.ext.commands.Context - "Represents the context in which a command is being invoked under. extracted from "https://discordpy.readthedocs.io/en/stable/ext/commands/api.html#context"); Note: discord.ext represents discord's extensions
+
+
+# new slash command that takes in arguments - will print whatever user passes in
+@client.tree.command(name="printer", description="I print whatever you give me", guild=GUILD_ID)
+async def printer(interaction : discord.Interaction, printer : str, num : int):
+  # the 2nd arg is the arg expected by the user - a str. it wont be "message : discord.Message" -> have to figure why
+  # a 3rd arg is also created for fun - its a num
+
+  for i in range(num):
+    print(f"content num {i}: {printer}") # Note: this is terminal output, we will have to use the "interaction" argument
+
+    try:
+      await interaction.channel.send(f"{i}: {printer}")
+
+    except Exception as e:
+      print(f"passing over the respond-msg needed in this interaction; whoops exception: {e}")
+
+    # the following piece of try-except block code, is because discord.Interaction.response.send_message()
+    # is a singular response to the slash command that calls it. you can't for loop and rerun the response
+    # because it is a response to the one command called. kind of working in pairs - one response to one user slash command (user as in a discord interaction from an irl person not client/bot)
+    # for multiple "responses", do discord.Interaction.channel.send() (apparently this does not work unless using
+    # the @discord.ext.commands.Bot.command() decorator, instead of the bot.tree.command) (ofc "discord.ext.commands.Bot" can be renamed to "bot" or whatever)
+
+    # Note: even while using the channel.send() approach, discord will still spit out an error msg: "The application did not respond"
+    # raised by the NotFound exception
+    # this is because the slash command REQUIRES one response, which will raise the error if not used response.send_message
+
+
+    # try:
+    #   await interaction.response.send_message(f"{i}: {printer}")
+    #
+    #
+    # except discord.InteractionResponded:
+    #   # print(f"whoops, : {e}")
+    #   await interaction.channel.send(f"{i}: {printer}")
+
+
+    await asyncio.sleep(0.1)  # makes the response sleep a sec and "reset" for next await req
+
+  # intention to loop and interaction.channel.send() until done, then wait a sec (asyncio.sleep()) then respond to the interaction
+  await asyncio.sleep(1)
+  await interaction.response.send_message("Finished processing")
+
+
+client.run(token, log_handler=logging_handler, log_level=logging.DEBUG)
