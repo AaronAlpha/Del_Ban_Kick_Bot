@@ -127,7 +127,8 @@ class Client(commands.Bot):
     if message.author == self.user: # to avoid the case where the bot replies to itself
       return
 
-    products_lowercase : list[str] = ["playstation", "ps5", "xbox", "nintendo", "macbook", "dell", "msi", "iphone", "samsung", "canon", "tickets", ]
+    products_lowercase : list[str] = ["playstation", "ps5", "xbox", "nintendo", "macbook", "dell", "msi", "iphone", "samsung", "phone", "canon", "tickets", ]
+    contact_lowercase : list[str] = ["msg me", "message me", "dm me", "whatsapp", "@gmail.com", "@icloud.com"]
 
     # reoccurring-flags
     if ("@everyone" in message.content) or ("everyone" in message.content.lower()) or ("@here" in message.content) or (message.mention_everyone == True):
@@ -139,7 +140,18 @@ class Client(commands.Bot):
     for product in products_lowercase:
       if product in message.content.lower():
         self.productBool = True
+        # flag 3
         break # leaves loop once a "True" is found; indicating that there exists a product in the msg content
+    for contact in contact_lowercase:
+      if contact in message.content.lower():
+        self.contactBool = True
+            # flag 4
+        break
+
+    # optional-flags
+    if 1 == 0:
+      pass
+
 
 
     await self.process_commands() # required! when overriding the on_message() method to process further commands
