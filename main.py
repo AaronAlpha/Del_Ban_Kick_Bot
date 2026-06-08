@@ -80,7 +80,8 @@ class Client(commands.Bot):
 
   """
 
-
+  # definition of class vars and their type-hints
+  # reoccurring-flags
   mentionedBool : bool  # a msg with @everyone's or @here's a msg, causes this bool to become True
   sell_giveBool : bool  # a msg with keyword "sell" or "give away" in a msg, causes this bool to become True
   productBool : bool  # a msg that contains some form of product (even the selling of tickets) being advertised/promoted, causes this bool to become True
@@ -92,7 +93,7 @@ class Client(commands.Bot):
   interestBool_optional : bool  # a msg that contains a phrase that asks for interest, causes this bool to become True
   reasonBool_optional : bool
 
-
+  # defining a Client(commands.Bot) inherited-obj with the following class var assignments
   def __init__(self):
     # reoccurring-flags
     self.mentionedBool = False  # a msg with @everyone's or @here's a msg, causes this bool to become True
@@ -106,6 +107,8 @@ class Client(commands.Bot):
     self.interestBool_optional = False  # a msg that contains a phrase that asks for interest, causes this bool to become True
     self.reasonBool_optional = False  # a msg that contains a reason for the advertisement/promotion, causes this bool to become True
 
+
+  # the on_ready() class method
   async def on_ready(self):
     print(f"Logged in as: '{self.user}'")
 
@@ -119,18 +122,24 @@ class Client(commands.Bot):
     except Exception as e:
       print(f"Whoops, error syncing commands: {e}")
 
-
-
   # used to receive messages from the discord server
   async def on_message(self, message : discord.Message):
     if message.author == self.user: # to avoid the case where the bot replies to itself
       return
 
-    # if message.content.startswith('@everyone'): # hits if the message starts with "hello"
-    if "@everyone" in message.content: # this does the same as the above line
-      await message.channel.send(f"Hi there {message.author.mention}")
-    elif "everyone" in message.content:
+    products_lowercase : list[str] = ["playstation", "ps5", "xbox", "nintendo", "macbook", "dell", "msi", "iphone", "samsung", "canon", "tickets", ]
 
+    # reoccurring-flags
+    if ("@everyone" in message.content) or ("everyone" in message.content.lower()) or ("@here" in message.content) or (message.mention_everyone == True):
+      self.mentionedBool = True
+      # flag 1
+    if ("sell" in message.content.lower()) or ("selling" in message.content.lower()) or ("give away" in message.content.lower()) or ("giving away" in message.content.lower()):
+      self.sell_giveBool = True
+      # flag 2
+    for product in products_lowercase:
+      if product in message.content.lower():
+        self.productBool = True
+        break # leaves loop once a "True" is found; indicating that there exists a product in the msg content
 
 
     await self.process_commands() # required! when overriding the on_message() method to process further commands
