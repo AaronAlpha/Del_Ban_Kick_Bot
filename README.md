@@ -13,6 +13,7 @@ Bot uses '**Render**' as the hosting service and '**UptimeRobot**' monitoring se
 
 ## References
 - "discord.py API Reference" : **https://discordpy.readthedocs.io/en/stable/api.html**
+- https://nikola.dev/posts/2021-09-25/object_oriented_discord_bot
 ### Code Tutorial Vids
 - ["How to Build a Discord Bot With Python - Full Tutorial 2025+"-"Tech With Tim"](https://www.youtube.com/watch?v=YD_N6Ffoojw&list=PLPX8wGaTDl1bRzgQKYN6NOt-aUUhTpelc&index=2)     (was primary vid for setting up code)
 - ["How to make a Discord Bot in Python! (Part 8: Kick/Ban) (2021 Update)"-"James S"](https://www.youtube.com/watch?v=AhuLLkKk-C0&list=PL-7Dfw57ZZVRB4N7VWPjmT0Q-2FIMNBMP&index=8)
