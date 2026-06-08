@@ -32,6 +32,80 @@ class Client(commands.Bot):
 # creating the discord application, by inheriting from "discord.Client" (which is the notation for inheritance)
 # Regular class notation is as such: "class myClass:" with no parentheses. I.e. parentheses is only used for inheritance
 
+
+  """
+  will be using a flag system; there will be "reoccurring" flags and "optional" flags
+
+  reoccurring-flags - content in msgs the reoccur
+  optional-flags - content in msgs that may appear but not for all bot-acc msgs
+
+  reoccurring-flag content:
+    1) some variation of "everyone" word used -> "@everyone", or "Hey everyone" (word "everyone" is used in a context)
+      a) or "@here"
+        i) will check if it is a ping form as well (i.e. message.mention type)
+
+    2) contains keyword "sell"/"give away" followed by some variation of "my old *product* name", for some reason like "just upgrading" to a new product
+      a) "...looking to sell..." followed by some form of product
+      b) "Giving away my old *product*"
+      c) tickets to a concert
+        i) "...tickets to Billie Eilish..." or equivalent (maybe Taylor Swift is the artist instead)
+
+    3) contains product keyword - additionally, if it is to sell/give away some
+      a) "PlayStation"/"PS5" or any other equivalent GAME-CONSOLE type
+      b) "MSI Stealth 16 AI Studio" or any other equivalent LAPTOP type
+      c) "Canon camera" or any other equivalent CAMERA type
+
+    4) contains phrase/words that indicate a way to contact the bot acc
+      a) "MSG me" or equivalent
+      b) includes contact details and app to contact
+        i) "WhatsApp +1 (903) 551-0002"
+       ii) "@gmail.com", "@icloud.com" and any other equivalent
+
+
+
+  optional-flag content:
+    1) has embedded-links/attachments
+      a) such as website links - "steam gift $50 - *link*"
+      b) attached img of the product
+        i) img of the laptop
+       ii) img of the camera
+
+    2) "first come, first serve" or equivalent (with or w/o comma)
+
+    3) msg asks if there is interest
+      a) "Is there anyone who would be interested..." (can break this phrase up into smaller chunks to verify in if-stmts)
+
+    4) contains reason for selling/giving away
+      a) contains "Just upgraded!" or any variation of it
+
+  """
+
+
+  mentionedBool : bool  # a msg with @everyone's or @here's a msg, causes this bool to become True
+  sell_giveBool : bool  # a msg with keyword "sell" or "give away" in a msg, causes this bool to become True
+  productBool : bool  # a msg that contains some form of product (even the selling of tickets) being advertised/promoted, causes this bool to become True
+  contactBool : bool  # a msg that contains contact-details for the involvement of the product being advertised/promoted, causes this bool to become True
+
+  # optional-flags
+  embedBool_optional : bool  # a msg that contains an embedded link or photo attachment as a part of the msg, causes this bool to become True
+  fcfsBool_optional : bool # a msg that contains the phrase "first come first serve" as a part of the msg, causes this bool to become True
+  interestBool_optional : bool  # a msg that contains a phrase that asks for interest, causes this bool to become True
+  reasonBool_optional : bool
+
+
+  def __init__(self):
+    # reoccurring-flags
+    self.mentionedBool = False  # a msg with @everyone's or @here's a msg, causes this bool to become True
+    self.sell_giveBool = False  # a msg with keyword "sell" or "give away" in a msg, causes this bool to become True
+    self.productBool = False  # a msg that contains some form of product (even the selling of tickets) being advertised/promoted, causes this bool to become True
+    self.contactBool = False  # a msg that contains contact-details for the involvement of the product being advertised/promoted, causes this bool to become True
+
+    # optional-flags
+    self.embedBool_optional = False  # a msg that contains an embedded link or photo attachment as a part of the msg, causes this bool to become True
+    self.fcfsBool_optional = False  # a msg that contains the phrase "first come first serve" as a part of the msg, causes this bool to become True
+    self.interestBool_optional = False  # a msg that contains a phrase that asks for interest, causes this bool to become True
+    self.reasonBool_optional = False  # a msg that contains a reason for the advertisement/promotion, causes this bool to become True
+
   async def on_ready(self):
     print(f"Logged in as: '{self.user}'")
 
@@ -45,6 +119,8 @@ class Client(commands.Bot):
     except Exception as e:
       print(f"Whoops, error syncing commands: {e}")
 
+
+
   # used to receive messages from the discord server
   async def on_message(self, message : discord.Message):
     if message.author == self.user: # to avoid the case where the bot replies to itself
@@ -53,6 +129,9 @@ class Client(commands.Bot):
     # if message.content.startswith('@everyone'): # hits if the message starts with "hello"
     if "@everyone" in message.content: # this does the same as the above line
       await message.channel.send(f"Hi there {message.author.mention}")
+    elif "everyone" in message.content:
+
+
 
     await self.process_commands() # required! when overriding the on_message() method to process further commands
 
@@ -82,7 +161,7 @@ class Client(commands.Bot):
 
 
 
-client = Client(command_prefix="$", intents=intents) # where the command prefix represents how to interact with a bot
+client = Client(command_prefix="$", intents=intents) # where the command prefix represents how to interact with a bot - no just use slash command
 
 
 
