@@ -1,5 +1,4 @@
-import asyncio
-
+import regex # used for detecting predictable phrases
 import discord
 from discord import guild
 from discord.ext import commands # commands from discord extensions
@@ -129,6 +128,8 @@ class Client(commands.Bot):
 
     products_lowercase : list[str] = ["playstation", "ps5", "xbox", "nintendo", "macbook", "dell", "msi", "iphone", "samsung", "phone", "canon", "tickets", ]
     contact_lowercase : list[str] = ["msg me", "message me", "dm me", "whatsapp", "@gmail.com", "@icloud.com"]
+
+
 
     # reoccurring-flags
     if ("@everyone" in message.content) or ("everyone" in message.content.lower()) or ("@here" in message.content) or (message.mention_everyone == True):
