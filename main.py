@@ -1,4 +1,5 @@
-import regex # used for detecting predictable phrases
+import regex as re # used for detecting predictable phrases
+import asyncio
 import discord
 from discord import guild
 from discord.ext import commands # commands from discord extensions
@@ -32,94 +33,22 @@ class Client(commands.Bot):
 # Regular class notation is as such: "class myClass:" with no parentheses. I.e. parentheses is only used for inheritance
 
 
-  """
-  will be using a flag system; there will be "reoccurring" flags and "optional" flags
+  # RegEx stuff - the pattern to look for; class-defined
 
-  reoccurring-flags - content in msgs the reoccur
-  optional-flags - content in msgs that may appear but not for all bot-acc msgs
+  # ticket pattern (for those selling tickets
+  tickets_pattern : str = ("(@everyone|Hi @everyone|Hi everyone)?\\!\\s*(I'm|Im|im)\\s*(looking to sell my tickets to)\\s*[A-"
+                   "Za-z]\\s*(for)\\s*([\\w+], [\\w+] [\\d+],)\\s*[A-Za-z]+\\s*(at)\\s*[A-Za-z]\\s*(,)\\s*[A-Za-z]\\s*\\.?\\s*(A-Za-z)\\s*(if interested)\\s*\\.?")
 
-  reoccurring-flag content:
-    1) some variation of "everyone" word used -> "@everyone", or "Hey everyone" (word "everyone" is used in a context)
-      a) or "@here"
-        i) will check if it is a ping form as well (i.e. message.mention type)
+  gift_card_pattern : str = "(@everyone)?[A-Za-z]\\s*(gift card)\\s*\\$*[\\d+]\\$*\\s*-\\s*[A-Za-z0-9/.]"
 
-    2) contains keyword "sell"/"give away" followed by some variation of "my old *product* name", for some reason like "just upgrading" to a new product
-      a) "...looking to sell..." followed by some form of product
-      b) "Giving away my old *product*"
-      c) tickets to a concert
-        i) "...tickets to Billie Eilish..." or equivalent (maybe Taylor Swift is the artist instead)
+  # product_pattern : str
 
-    3) contains product keyword - additionally, if it is to sell/give away some
-      a) "PlayStation"/"PS5" or any other equivalent GAME-CONSOLE type
-      b) "MSI Stealth 16 AI Studio" or any other equivalent LAPTOP type
-      c) "Canon camera" or any other equivalent CAMERA type
-
-    4) contains phrase/words that indicate a way to contact the bot acc
-      a) "MSG me" or equivalent
-      b) includes contact details and app to contact
-        i) "WhatsApp +1 (903) 551-0002"
-       ii) "@gmail.com", "@icloud.com" and any other equivalent
-
-
-
-  optional-flag content:
-    1) has embedded-links/attachments
-      a) such as website links - "steam gift $50 - *link*"
-      b) attached img of the product
-        i) img of the laptop
-       ii) img of the camera
-
-    2) "first come, first serve" or equivalent (with or w/o comma)
-
-    3) msg asks if there is interest
-      a) "Is there anyone who would be interested..." (can break this phrase up into smaller chunks to verify in if-stmts)
-
-    4) contains reason for selling/giving away
-      a) contains "Just upgraded!" or any variation of it
-
-  """
-
-  # definition of class vars and their type-hints
-  # reoccurring-flags
-  mentionedBool : bool  # a msg with @everyone's or @here's a msg, causes this bool to become True
-  sell_giveBool : bool  # a msg with keyword "sell" or "give away" in a msg, causes this bool to become True
-  productBool : bool  # a msg that contains some form of product (even the selling of tickets) being advertised/promoted, causes this bool to become True
-  contactBool : bool  # a msg that contains contact-details for the involvement of the product being advertised/promoted, causes this bool to become True
-
-  # optional-flags
-  embedBool_optional : bool  # a msg that contains an embedded link or photo attachment as a part of the msg, causes this bool to become True
-  fcfsBool_optional : bool # a msg that contains the phrase "first come first serve" as a part of the msg, causes this bool to become True
-  interestBool_optional : bool  # a msg that contains a phrase that asks for interest, causes this bool to become True
-  reasonBool_optional : bool
-
-  # defining a Client(commands.Bot) inherited-obj with the following class var assignments
-  def __init__(self):
-    # reoccurring-flags
-    self.mentionedBool = False  # a msg with @everyone's or @here's a msg, causes this bool to become True
-    self.sell_giveBool = False  # a msg with keyword "sell" or "give away" in a msg, causes this bool to become True
-    self.productBool = False  # a msg that contains some form of product (even the selling of tickets) being advertised/promoted, causes this bool to become True
-    self.contactBool = False  # a msg that contains contact-details for the involvement of the product being advertised/promoted, causes this bool to become True
-
-    # optional-flags
-    self.embedBool_optional = False  # a msg that contains an embedded link or photo attachment as a part of the msg, causes this bool to become True
-    self.fcfsBool_optional = False  # a msg that contains the phrase "first come first serve" as a part of the msg, causes this bool to become True
-    self.interestBool_optional = False  # a msg that contains a phrase that asks for interest, causes this bool to become True
-    self.reasonBool_optional = False  # a msg that contains a reason for the advertisement/promotion, causes this bool to become True
 
 
   # the on_ready() class method
   async def on_ready(self):
     print(f"Logged in as: '{self.user}'")
 
-    # to utilize our slash commands, we have to do the "synced" line, where we force our slash commands to forcibly sync and show up
-    try:
-      guild = discord.Object(id=1511153803909398538)
-      # synced = await self.tree.sync(guild=GUILD_ID)
-      # print(f"Synced {len(synced)} commands to guild {guild.id}") # way to check if the "synced" var was successful
-      # by printing a number (in the terminal) of all the possible slash commands written for the bot so the specific server being developed for
-
-    except Exception as e:
-      print(f"Whoops, error syncing commands: {e}")
 
   # used to receive messages from the discord server
   async def on_message(self, message : discord.Message):
@@ -129,29 +58,11 @@ class Client(commands.Bot):
     products_lowercase : list[str] = ["playstation", "ps5", "xbox", "nintendo", "macbook", "dell", "msi", "iphone", "samsung", "phone", "canon", "tickets", ]
     contact_lowercase : list[str] = ["msg me", "message me", "dm me", "whatsapp", "@gmail.com", "@icloud.com"]
 
+    if re.search(pattern=self.tickets_pattern,string=message.content):
+      print("Hits")
+    else:
+      print("nope")
 
-
-    # reoccurring-flags
-    if ("@everyone" in message.content) or ("everyone" in message.content.lower()) or ("@here" in message.content) or (message.mention_everyone == True):
-      self.mentionedBool = True
-      # flag 1
-    if ("sell" in message.content.lower()) or ("selling" in message.content.lower()) or ("give away" in message.content.lower()) or ("giving away" in message.content.lower()):
-      self.sell_giveBool = True
-      # flag 2
-    for product in products_lowercase:
-      if product in message.content.lower():
-        self.productBool = True
-        # flag 3
-        break # leaves loop once a "True" is found; indicating that there exists a product in the msg content
-    for contact in contact_lowercase:
-      if contact in message.content.lower():
-        self.contactBool = True
-            # flag 4
-        break
-
-    # optional-flags
-    if 1 == 0:
-      pass
 
 
 
