@@ -1,0 +1,189 @@
+import asyncio
+
+import discord
+from discord import guild
+from discord.ext import commands # commands from discord extensions
+from discord import app_commands # this and above line required to write slash commands
+
+import logging
+from dotenv import load_dotenv # this statement is used to allow to import our Discord Token (Private Key) from our .env file
+import os
+
+load_dotenv() # loads token from environment variable file (.env)
+token = os.getenv('DISCORD_TOKEN') # getting out Discord Token from the .env file
+
+logging_handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w') # creating a file that will handle logging (name=discord.log; mode=write[w])
+
+
+# setting up the intents that bot
+intents = discord.Intents.none() # creates an "Intents" instance (class obj, where "Intents" is the class, "discord" is the module - "none()" is the class method for "Intents") - no intents set
+# specifying manual intents; refer "https://discordpy.readthedocs.io/en/stable/api.html?highlight=intents#intents" for all Intents-class attributes (attr) and methods
+intents.bans = True # allowing for Member properties (attr and methods); analogous to intents.moderation = True
+intents.messages = True
+intents.message_content = True # reading message content
+intents.members = True
+intents.reactions = True # allowing for a Bot reacting to a reaction placed on a message in that channel
+
+
+
+# this is another way of creating a bot instance - the Bot-command creation process is a subclass of the discord.Client class
+# Note: when developing slash commands, need to inherit from "discord.ext.commands.Bot" instead of "discord.Client"
+class Client(commands.Bot):
+# creating the discord application, by inheriting from "discord.Client" (which is the notation for inheritance)
+# Regular class notation is as such: "class myClass:" with no parentheses. I.e. parentheses is only used for inheritance
+
+
+  """
+  will be using a flag system; there will be "reoccurring" flags and "optional" flags
+
+  reoccurring-flags - content in msgs the reoccur
+  optional-flags - content in msgs that may appear but not for all bot-acc msgs
+
+  reoccurring-flag content:
+    1) some variation of "everyone" word used -> "@everyone", or "Hey everyone" (word "everyone" is used in a context)
+      a) or "@here"
+        i) will check if it is a ping form as well (i.e. message.mention type)
+
+    2) contains keyword "sell"/"give away" followed by some variation of "my old *product* name", for some reason like "just upgrading" to a new product
+      a) "...looking to sell..." followed by some form of product
+      b) "Giving away my old *product*"
+      c) tickets to a concert
+        i) "...tickets to Billie Eilish..." or equivalent (maybe Taylor Swift is the artist instead)
+
+    3) contains product keyword - additionally, if it is to sell/give away some
+      a) "PlayStation"/"PS5" or any other equivalent GAME-CONSOLE type
+      b) "MSI Stealth 16 AI Studio" or any other equivalent LAPTOP type
+      c) "Canon camera" or any other equivalent CAMERA type
+
+    4) contains phrase/words that indicate a way to contact the bot acc
+      a) "MSG me" or equivalent
+      b) includes contact details and app to contact
+        i) "WhatsApp +1 (903) 551-0002"
+       ii) "@gmail.com", "@icloud.com" and any other equivalent
+
+
+
+  optional-flag content:
+    1) has embedded-links/attachments
+      a) such as website links - "steam gift $50 - *link*"
+      b) attached img of the product
+        i) img of the laptop
+       ii) img of the camera
+
+    2) "first come, first serve" or equivalent (with or w/o comma)
+
+    3) msg asks if there is interest
+      a) "Is there anyone who would be interested..." (can break this phrase up into smaller chunks to verify in if-stmts)
+
+    4) contains reason for selling/giving away
+      a) contains "Just upgraded!" or any variation of it
+
+  """
+
+  # definition of class vars and their type-hints
+  # reoccurring-flags
+  mentionedBool : bool  # a msg with @everyone's or @here's a msg, causes this bool to become True
+  sell_giveBool : bool  # a msg with keyword "sell" or "give away" in a msg, causes this bool to become True
+  productBool : bool  # a msg that contains some form of product (even the selling of tickets) being advertised/promoted, causes this bool to become True
+  contactBool : bool  # a msg that contains contact-details for the involvement of the product being advertised/promoted, causes this bool to become True
+
+  # optional-flags
+  embedBool_optional : bool  # a msg that contains an embedded link or photo attachment as a part of the msg, causes this bool to become True
+  fcfsBool_optional : bool # a msg that contains the phrase "first come first serve" as a part of the msg, causes this bool to become True
+  interestBool_optional : bool  # a msg that contains a phrase that asks for interest, causes this bool to become True
+  reasonBool_optional : bool
+
+  # defining a Client(commands.Bot) inherited-obj with the following class var assignments
+  def __init__(self):
+    # reoccurring-flags
+    self.mentionedBool = False  # a msg with @everyone's or @here's a msg, causes this bool to become True
+    self.sell_giveBool = False  # a msg with keyword "sell" or "give away" in a msg, causes this bool to become True
+    self.productBool = False  # a msg that contains some form of product (even the selling of tickets) being advertised/promoted, causes this bool to become True
+    self.contactBool = False  # a msg that contains contact-details for the involvement of the product being advertised/promoted, causes this bool to become True
+
+    # optional-flags
+    self.embedBool_optional = False  # a msg that contains an embedded link or photo attachment as a part of the msg, causes this bool to become True
+    self.fcfsBool_optional = False  # a msg that contains the phrase "first come first serve" as a part of the msg, causes this bool to become True
+    self.interestBool_optional = False  # a msg that contains a phrase that asks for interest, causes this bool to become True
+    self.reasonBool_optional = False  # a msg that contains a reason for the advertisement/promotion, causes this bool to become True
+
+
+  # the on_ready() class method
+  async def on_ready(self):
+    print(f"Logged in as: '{self.user}'")
+
+    # to utilize our slash commands, we have to do the "synced" line, where we force our slash commands to forcibly sync and show up
+    try:
+      guild = discord.Object(id=1511153803909398538)
+      # synced = await self.tree.sync(guild=GUILD_ID)
+      # print(f"Synced {len(synced)} commands to guild {guild.id}") # way to check if the "synced" var was successful
+      # by printing a number (in the terminal) of all the possible slash commands written for the bot so the specific server being developed for
+
+    except Exception as e:
+      print(f"Whoops, error syncing commands: {e}")
+
+  # used to receive messages from the discord server
+  async def on_message(self, message : discord.Message):
+    if message.author == self.user: # to avoid the case where the bot replies to itself
+      return
+
+    products_lowercase : list[str] = ["playstation", "ps5", "xbox", "nintendo", "macbook", "dell", "msi", "iphone", "samsung", "phone", "canon", "tickets", ]
+    contact_lowercase : list[str] = ["msg me", "message me", "dm me", "whatsapp", "@gmail.com", "@icloud.com"]
+
+    # reoccurring-flags
+    if ("@everyone" in message.content) or ("everyone" in message.content.lower()) or ("@here" in message.content) or (message.mention_everyone == True):
+      self.mentionedBool = True
+      # flag 1
+    if ("sell" in message.content.lower()) or ("selling" in message.content.lower()) or ("give away" in message.content.lower()) or ("giving away" in message.content.lower()):
+      self.sell_giveBool = True
+      # flag 2
+    for product in products_lowercase:
+      if product in message.content.lower():
+        self.productBool = True
+        # flag 3
+        break # leaves loop once a "True" is found; indicating that there exists a product in the msg content
+    for contact in contact_lowercase:
+      if contact in message.content.lower():
+        self.contactBool = True
+            # flag 4
+        break
+
+    # optional-flags
+    if 1 == 0:
+      pass
+
+
+
+    await self.process_commands() # required! when overriding the on_message() method to process further commands
+
+  async def detect(self, message : discord.Message):
+    pass # detects all the types of content in a bot discord msg (like the product being promoted, or other common phrases)
+
+  # the ban_kick method -> once triggered the message will be deleted (in the on_message() event) and trigger the function
+  async def ban_kick_Member(self, member: discord.Member, channel):
+    # catching errors
+    try:
+      await member.ban(reason="Bot!")  # bans said member
+      await member.kick(reason="Bot!")  # kicks said member
+      await channel.send(
+        f"{member.mention} was a bot and was thus BANNED and KICKED by {self.user} the great! FEAR ME, RAHH!")  # sending message of the kick and ban of said member
+
+    except Exception as e:
+      await channel.send(f"The Exception captured was: {e}\n'@CompE Club Exec' for tech_Support")
+
+
+# Note: if the bot stops running (after script is terminated); then rerun and then perform a reaction on a msg (which was sent before the bot was terminated), the bot will
+# not respond to the reaction as described below. It will only respond to msgs that have been reacted to after the bot is run again (the script is rerun)
+# most likely to do with caches etc
+  async def on_reaction_add(self, reaction, user): # response if someone reacts to a msg
+    # Note: "Intents.reactions = True" for ANY "Reactions" event
+      await reaction.message.channel.send("You reacted")
+
+
+
+
+client = Client(command_prefix="$", intents=intents) # where the command prefix represents how to interact with a bot - no just use slash command
+
+
+
+client.run(token, log_handler=logging_handler, log_level=logging.DEBUG)
