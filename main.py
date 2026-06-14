@@ -35,19 +35,28 @@ class Client(commands.Bot):
 
   # RegEx stuff - the pattern to look for; class-defined
 
-  # ticket pattern (for those selling tickets
-  tickets_pattern : str = ("(@everyone|Hi @everyone|Hi everyone)?\\!\\s*(I'm|Im|im)\\s*(looking to sell my tickets to)\\s*[A-"
-                   "Za-z]\\s*(for)\\s*([\\w+], [\\w+] [\\d+],)\\s*[A-Za-z]+\\s*(at)\\s*[A-Za-z]\\s*(,)\\s*[A-Za-z]\\s*\\.?\\s*(A-Za-z)\\s*(if interested)\\s*\\.?")
+  # ticket pattern (for those selling tickets) - this doesn't work
+  # tickets_pattern : str = ("(@everyone|Hi @everyone|Hi everyone)?\\!\\s*(I'm|Im|im)\\s*(looking to sell my tickets to)\\s*[A-"
+  #                  "Za-z]\\s*(for)\\s*([\\w+], [\\w+] [\\d+],)\\s*[A-Za-z]+\\s*(at)\\s*[A-Za-z]\\s*(,)\\s*[A-Za-z]\\s*\\.?\\s*"
+  #                          "(A-Za-z)\\s*(if interested)\\s*\\.?")
 
-  gift_card_pattern : str = "(@everyone)?[A-Za-z]\\s*(gift card)\\s*\\$*[\\d+]\\$*\\s*-\\s*[A-Za-z0-9/.]"
+  tickets_pattern : str = ("(@everyone|Hi\\s*@everyone|Hi\\s*everyone|hi\\s*@everyone|hi\\s*everyone)?\\s*([A-Za-z]|my)\\s*(looking)*\\s*(to)*\\s*(sell)\\s*[A-Za-z]*\\s*(tickets)\\s*"
+                           "([A-Za-z]|to)*\\s*(Taylor Swift|Billie Eilish|Dua Lipa|The Weekend|[A-Za-z])+\\s*(for|[A-Za-z])\\s*(([A-Za-z]|Mon|Tue|Wed|Thur|Fri|Sat|Sun)*,*\\s*"
+                           "([A-Za-z]|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)*\\s*[0-9],*)\\s*[A-Za-z0-9]*\\s*(at|[A-Za-z])\\s*[A-Za-z\\s],*\\s*(Vancouver|[A-Za-z]).*\\s*"
+                           "(HMU|[A-Za-z])*\\s*(if|[A-Za-z])*\\s*(interested)\\s*.*")
 
-  # product_pattern : str
+  # gift_card pattern (for those giving out links to scam sites, dressed as gift cards) - this works
+  gift_card_pattern : str = "(@everyone)?\\s*(steam|[A-Za-z])\\s*(gift\\s*card)\\s*\\$*\\s*[0-9]\\s*\\$*\\s*[-]*\\s*[A-Za-z0-9/.]\\n*(@everyone)?"
+
+  # all forms of Products being sold (macbooks/cameras etc) - needs work
+  product_pattern : str = "  "
 
 
 
   # the on_ready() class method
   async def on_ready(self):
     print(f"Logged in as: '{self.user}'")
+
 
 
   # used to receive messages from the discord server
@@ -59,10 +68,9 @@ class Client(commands.Bot):
     contact_lowercase : list[str] = ["msg me", "message me", "dm me", "whatsapp", "@gmail.com", "@icloud.com"]
 
     if re.search(pattern=self.tickets_pattern,string=message.content):
-      print("Hits")
+      await message.channel.send("Yee")
     else:
-      print("nope")
-
+      await message.channel.send("Nee")
 
 
 
