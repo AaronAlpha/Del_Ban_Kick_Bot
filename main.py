@@ -9,6 +9,12 @@ import logging
 from dotenv import load_dotenv # this statement is used to allow to import our Discord Token (Private Key) from our .env file
 import os
 
+import webServer_keepAlive as keep_alive
+
+
+keep_alive.keep_alive()
+
+
 load_dotenv() # loads token from environment variable file (.env)
 token = os.getenv('DISCORD_TOKEN') # getting out Discord Token from the .env file
 
@@ -41,19 +47,25 @@ class Client(commands.Bot):
   #                          "(A-Za-z)\\s*(if interested)\\s*\\.?")
 
   tickets_pattern : str = ("(@everyone|Hi\\s*@everyone|Hi\\s*everyone|hi\\s*@everyone|hi\\s*everyone)?\\s*([A-Za-z]|my)\\s*(looking)*\\s*(to)*\\s*(sell)\\s*[A-Za-z]*\\s*(tickets)\\s*"
-                           "([A-Za-z]|to)*\\s*(Taylor Swift|Billie Eilish|Dua Lipa|The Weekend|[A-Za-z])+\\s*(for|[A-Za-z])\\s*(([A-Za-z]|Mon|Tue|Wed|Thur|Fri|Sat|Sun)*,*\\s*"
-                           "([A-Za-z]|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)*\\s*[0-9],*)\\s*[A-Za-z0-9]*\\s*(at|[A-Za-z])\\s*[A-Za-z\\s],*\\s*(Vancouver|[A-Za-z]).*\\s*"
-                           "(HMU|[A-Za-z])*\\s*(if|[A-Za-z])*\\s*(interested)\\s*.*")
+                           "([A-Za-z]|to)*\\s*(taylor\\s*swift|billie\\s*eilish|dua\\s*lipa|the\\s*weekend|sabrina\\s*carpenter|[A-Za-z])+\\s*(for|[A-Za-z])\\s*(([A-Za-z]|mon(day)*|tue(sday)*|wed(nesday)*|thur(sday)*|fri(day)*|sat(urday)*|sun(day)*)*,*\\s*"
+                           "([A-Za-z]|jan(uary)*|feb(ruary)*|mar(ch)*|apr(il)*|may|jun(e)*|jul(y)*|aug(ust)*|sep(tember)*|oct(ober)*|nov(ember)*|dec(ember)*)*\\s*[0-9],*)\\s*[A-Za-z0-9]*\\s*(at|[A-Za-z])\\s*[A-Za-z\\s],*\\s*(vancouver|toronto|montreal|[A-Za-z]).*\\s*"
+                           "(hmu|msg\\s*(me)*|[A-Za-z])*\\s*(if|[A-Za-z])*\\s*(interested)\\s*.*")
 
   # gift_card pattern (for those giving out links to scam sites, dressed as gift cards) - this works
   gift_card_pattern : str = "(@everyone)?\\s*(steam|[A-Za-z])\\s*(gift\\s*card)\\s*\\$*\\s*[0-9]\\s*\\$*\\s*[-]*\\s*[A-Za-z0-9/.]\\n*(@everyone)?"
 
   # all forms of Products being sold (macbooks/cameras etc) - needs work
-  product_pattern : str = "  "
+  # product_pattern : str = ("(i|[a-z])*\\s*(want|[a-z])*\\s*(to|[a-z])*\\s*(give|[a-z])*\\s*(out|[a-z])*\\s*(my|[a-z])\\s*(macbook|canon|[a-z])*\\s*(air|camera|[a-z])*\\s*(202[0-9])*\\s*((&\\s*charger\\*\\*)\\s*(for\\s*free))*,*\\s*[a-z]*\\s*(perfect\\s*health)\\s*[a-z]*(good\\s*as\\s*new)*,*(alongside\\s*a\\s*charger)*\\s*(so\\s*it’s\\s*perfect)*,*\\s*(i)*\\s*(want\\s*to)*"
+  #                          "(give\\s*it\\s*out)*\\s*(because\\s*(i\\s*just\\s*got\\s*a)*\\s*new\\s*model)*\\s*[a-z]*\\s*((thought\\s*of\\s*giving)*\\s*(out\\s*the)*\\s*(old\\s*one)*\\s*(to\\s*someone)*\\s*(who can’t)*\\s*"
+  #                          "(afford\\s*one)*)*\\s*[a-z]*\\s*(((dire)*\\s*need)*\\s*of\\s*it)*\\s*(…)*\\s*(strictly\\s*first\\s*come\\s*first\\s*serve\\s*!)*\\n*(dm)\\s*(if you|[a-z])*\\s*(are|[a-z])*\\s*(interested)\\s*(text)\\s*(me directly on|[a-z])*\\s*"
+  #                          "(messenger|whatsapp|instagram|facebook|[a-z])*\\s*(([a-z0-9]+@(gmail|icloud)\\.com))")
+
+  product_pattern : str = ("(i|[a-z])*\\s*(want|[a-z])*\\s*(to|[a-z])*\\s*(give|[a-z])*\\s*(out|[a-z])*\\s*(my|[a-z])\\s*(macbook|canon|[a-z])*\\s*(air|camera|[a-z])*\\s*(202[0-9])*\\s*((&\\s*charger\\*\\*)\\s*(for\\s*free))*,*\\s*[a-z]*\\s*(perfect\\s*health)\\s*[a-z]*(good\\s*as\\s*new)*,*(alongside\\s*a\\s*charger)*\\s*(so\\s*it’s\\s*perfect)*,*\\s*(i)*\\s*(want\\s*to)*\\s*"
+                           "(give\\s*it\\s*out)*\\s*(because\\s*(i\\s*just\\s*got\\s*a)*\\s*new\\s*model)*\\s*[a-z]*\\s*(thought\\s*of\\s*giving)*\\s*(out\\s*the)*\\s*(old\\s*one)*\\s*(to\\s*someone)*\\s*(who\\s*can’t)*\\s*(afford\\s*one)*\\s*[a-z]*\\s*((dire)*\\s*need)*\\s*(of\\s*it)*\\s*"
+                           "(…)*\\s*(strictly\\s*first\\s*come\\s*first\\s*serve\\s*(!)*)*[\\s\\n]*(dm)*\\s*(if\\s*you|[a-z])*\\s*(are|[a-z])*\\s*(interested)*\\s*(text)*\\s*(me)*\\s*(directly)*\\s*(on|[a-z])*\\s*(messenger|whatsapp|instagram|facebook|[a-z])*\\s*([a-z0-9]+@(gmail|icloud|[a-z])\\.(com|[a-z]))")
 
 
 
-  # the on_ready() class method
   async def on_ready(self):
     print(f"Logged in as: '{self.user}'")
 
@@ -67,17 +79,16 @@ class Client(commands.Bot):
     products_lowercase : list[str] = ["playstation", "ps5", "xbox", "nintendo", "macbook", "dell", "msi", "iphone", "samsung", "phone", "canon", "tickets", ]
     contact_lowercase : list[str] = ["msg me", "message me", "dm me", "whatsapp", "@gmail.com", "@icloud.com"]
 
-    if re.search(pattern=self.tickets_pattern,string=message.content):
+    if re.search(pattern=self.product_pattern,string=message.content.lower()):
       await message.channel.send("Yee")
+      await message.delete() # deletes the message put in the channel
     else:
       await message.channel.send("Nee")
+      await message.channel.send(message.content.lower())
 
 
 
     await self.process_commands() # required! when overriding the on_message() method to process further commands
-
-  async def detect(self, message : discord.Message):
-    pass # detects all the types of content in a bot discord msg (like the product being promoted, or other common phrases)
 
   # the ban_kick method -> once triggered the message will be deleted (in the on_message() event) and trigger the function
   async def ban_kick_Member(self, member: discord.Member, channel):
