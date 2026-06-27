@@ -63,8 +63,8 @@ class Client(commands.Bot):
   #                          "(give\\s*it\\s*out)*\\s*(because\\s*(i\\s*just\\s*got\\s*a)*\\s*new\\s*model)*\\s*[a-z]*\\s*(thought\\s*of\\s*giving)*\\s*(out\\s*the)*\\s*(old\\s*one)*\\s*(to\\s*someone)*\\s*(who\\s*can’t)*\\s*(afford\\s*one)*\\s*[a-z]*\\s*((dire)*\\s*need)*\\s*(of\\s*it)*\\s*"
   #                          "(…)*\\s*(strictly\\s*first\\s*come\\s*first\\s*serve\\s*(!)*)*[\\s\\n]*(dm)*\\s*(if\\s*you|[a-z])*\\s*(are|[a-z])*\\s*(interested)*\\s*(text)*\\s*(me)*\\s*(directly)*\\s*(on|[a-z])*\\s*(messenger|whatsapp|instagram|facebook|[a-z])*\\s*([a-z0-9]+@(gmail|icloud|[a-z])\\.(com|[a-z]))")
 
-  tickets_pattern : str = ("(hi|hello|[a-z0-9.,/·])?\\s*(guys|(@)*everyone|anyone|[a-z0-9.,/·])*\\s*(interested|ended|[a-z0-9.,/·])\\s*(sell|buying|with)\\s*([a-z0-9.,/·]|tickets|tix|tic(s)*)\\s*[a-z0-9.,/·]*\\s*"
-                           "(hmu|msg\\s*(me)*|text\\s*(me)*|[a-z0-9.,/·])*\\s*(if|[a-z0-9.,/·])*\\s*(interested|[a-z0-9.,/·])*\\s*[a-z0-9.,/·]*\\s*(messenger|whatsapp|instagram|facebook|[a-z0-9.,/·])*"
+  tickets_pattern : str = ("(hi|hello|[a-z0-9.,/·])?\\s*(guys|(@)*everyone|anyone|[a-z0-9.,/·])*\\s*(interested|ended)\\s*[a-z0-9.,/·]*\\s*(sell|buying|with)\\s*[a-z0-9.,/·]*\\s*(tickets|tix|tic(s)*)"
+                           "\\s*[a-z0-9.,/·]*\\s*(hmu|msg\\s*(me)*|text\\s*(me)*)*\\s*[a-z0-9.,/·]*\\s*(if|[a-z0-9.,/·])*\\s*(interested)*\\s*[a-z0-9.,/·]*\\s*(messenger|whatsapp|instagram|facebook|[a-z0-9.,/·])*"
                            "\\s*(([a-z0-9]+@(gmail|icloud|[a-z])\\.(com|[a-z]))|([0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]))*")
 
   # gift_card pattern (for those giving out links to scam sites, dressed as gift cards) - this works
@@ -77,8 +77,11 @@ class Client(commands.Bot):
   #                          "((to\\s*someone)|[a-z0-9.,/·])*\\s*((who\\s*can’t)|[a-z0-9.,/·])*\\s*((afford\\s*(one)*)|[a-z0-9.,/])\\s*[a-z0-9.,/·]*\\s*((dire)*\\s*need)*\\s*(of\\s*it)*\\s*(…)*\\s*((strictly\\s*first\\s*come\\s*first\\s*serve\\s*(!)*)|[a-z0-9.,/])\\s*"
   #                          "(dm)*\\s*(if\\s*you|[a-z0-9.,/·])*\\s*(are|[a-z0-9.,/·])*\\s*(interested)*\\s*(text)*\\s*(me)*\\s*(directly)*\\s*(on|[a-z0-9.,/·])*\\s*(messenger|whatsapp|instagram|facebook|[a-z0-9.,/·])\\s*([a-z0-9]+@(gmail|icloud|[a-z])\\.(com|[a-z]))")
 
-  product_pattern : str = ("(hi|hello|hey|[a-z0-9.,/·])?\\s*[a-z0-9.,/·]*\\s*")
-
+  product_pattern : str = ("(hi|hello|hey|[a-z0-9.,/·])?\\s*[a-z0-9.,/·]*\\s*(guys|@everyone|everyone)\\s*[a-z0-9.,/·]*\\s*(give|giving)\\s*[a-z0-9.,/·]*\\s*(out\\s*my)*\\s*[a-z0-9.,/·]*\\s*"
+                           "(macbook|canon|laptop)*\\s*[a-z0-9.,/·]*\\s*(202[0-9])*\\s*((&)*\\s*charger)\\s*[a-z0-9.,/]*\\s*((for)*\\s*free)\\s*[a-z0-9.,/·]*\\s*(perfect\\s*health)\\s*[a-z0-9.,/·]*"
+                           "\\s*(good\\s*as\\s*new)\\s*[a-z0-9.,/·]*\\s*((so\\s*it’s)*\\s*perfect)\\s*[a-z0-9.,/·]*\\s*((because\\s*i\\s*just\\s*got\\s*a)\\s*new\\s*model)\\s*[a-z0-9.,/·]*\\s*"
+                           "(giving\\s*(out\\s*the\\s*old\\s*one)*)")
+# [a-z0-9.,/·]*
   
   tickets_lowercase : list[str] = ["(would)*\\s*(any(one|body))*\\s*(be)*\\s*interested\\s*in\\s*buying\\s*(my)*\\s*(tickets|tix|tics)", "won't\\s*be\\s*able\\s*to\\s*make\\s*it\\s*to\\s*the\\s*concert","(people\\s*got\\s*them\\s*for)*\\s*[a-z0-9.,/·]\\s*(look\\s*like\\s*they'll\\s*be\\s*dropping\\s*out)*"]
   products_lowercase : list[str] = ["playstation\\s*[0-9]", "ps\\s*[0-9]", "xbox(1|x|xs|360)", "nintendo", "macbook\\s*air", "dell", "msi", "iphone\\s*[0-9]*", "samsung\\s*[a-z0-9]*", "phone", "canon\\s*(camera)*", "tickets", "tics", "tix"]
@@ -98,79 +101,33 @@ class Client(commands.Bot):
 
   # used to receive messages from the discord server
   async def on_message(self, message : discord.Message):
+
     if message.author == self.user: # to avoid the case where the bot replies to itself
       return
 
-    for pattern in self.tickets_lowercase:
-      if re.findall(pattern=pattern, string=message.content.lower()):
-        if await self.detect(message):
-          print("Yee tix")
-          await message.delete()  # deletes the message put in the channel
-          try:
-            await self.ban_kick_Member(message.author, message.channel)
-          except Exception as e:
-            await message.channel.send(f"Error trying to ban_kick; reason: {e}")
-            await self.process_commands(message)
-            return
 
-          await message.author.send( # private DMs the message.author
-            f"Hi {message.author.mention}, you just got banned from the University of Alberta's \"Computer Engineering Club\" server that {self.user} is a part of.\n{self.user} exists to detect and catch certain phrases that are \"forbidden\" to be used in the server; "
-            f"you typed a message that contained one or more of these such phrases and have thus been ban and kicked.\n\nThis is the message that you typed (which contains \"forbidden\" phrases) to get banned:\n\"\n{message.content}\n\""
-            f"\n\nIf you feel you have been wrongly chosen to be banned and kicked, please DM \".chocolate.milk.\" with an appropriate reason; you will be judge by the Moderators/Exec Team of the club.\nThanks")
+    # for pattern in self.tickets_lowercase:
+    #   if re.findall(pattern=pattern, string=message.content.lower()):
+    if await self.detect(message):
+      print("Yee")
+      await message.delete()  # deletes the message put in the channel
+      try:
+        await self.ban_kick_Member(message.author, message.channel)
+      except Exception as e:
+        await message.channel.send(f"Error trying to ban_kick; reason: {e}")
+        await self.process_commands(message)
+        return
 
-          await self.process_commands(message)
+      await message.author.send( # private DMs the message.author
+        f"Hi {message.author.mention}, you just got banned from the University of Alberta's \"Computer Engineering Club\" server that {self.user} is a part of.\n{self.user} exists to detect and catch certain phrases that are \"forbidden\" to be used in the server; "
+        f"you typed a message that contained one or more of these such phrases and have thus been ban and kicked.\n\nThis is the message that you typed (which contains \"forbidden\" phrases) to get banned:\n\"\n{message.content}\n\""
+        f"\n\nIf you feel you have been wrongly chosen to be banned and kicked, please DM \".chocolate.milk.\" with an appropriate reason; you will be judge by the Moderators/Exec Team of the club.\nThanks")
 
-          return
-        else:
-          print("Nee")
+      await self.process_commands(message)
 
-    for pattern in self.products_lowercase:
-      if re.findall(pattern=pattern, string=message.content.lower()):
-        if await self.detect(message):
-          print("Yee prods")
-          await message.delete()  # deletes the message put in the channel
-
-          try:
-            await self.ban_kick_Member(message.author, message.channel)
-          except Exception as e:
-            await message.channel.send(f"Error, could not ban_kick {message.author}, the reason: {e}\n'@CompE Club Exec' for tech_Support")
-            await self.process_commands(message)
-            return
-
-          await message.author.send( # private DMs the message.author
-            f"Hi {message.author.mention}, you just got banned from the University of Alberta's \"Computer Engineering Club\" server that {self.user} is a part of.\n{self.user} exists to detect and catch certain phrases that are \"forbidden\" to be used in the server; "
-            f"you typed a message that contained one or more of these such phrases and have thus been ban and kicked.\n\nThis is the message that you typed (which contains \"forbidden\" phrases) to get banned:\n\"\n{message.content}\n\""
-            f"\n\nIf you feel you have been wrongly chosen to be banned and kicked, please DM \".chocolate.milk.\" with an appropriate reason; you will be judge by the Moderators/Exec Team of the club.\nThanks")
-
-          await self.process_commands(message)
-
-          return
-        else:
-          print("Nee")
-
-    for pattern in self.contact_lowercase:
-      if re.findall(pattern=pattern, string=message.content.lower()):
-        if await self.detect(message):
-          print("Yee contacs")
-          await message.delete()  # deletes the message put in the channel
-
-          try:
-            await self.ban_kick_Member(message.author, message.channel)
-          except Exception as e:
-            await message.channel.send(f"Error trying to ban_kick; reason: {e}")
-            await self.process_commands(message)
-            return
-
-          await message.author.send( # private DMs the message.author
-            f"Hi {message.author.mention}, you just got banned from the University of Alberta's \"Computer Engineering Club\" server that {self.user} is a part of.\n{self.user} exists to detect and catch certain phrases that are \"forbidden\" to be used in the server; "
-            f"you typed a message that contained one or more of these such phrases and have thus been ban and kicked.\n\nThis is the message that you typed (which contains \"forbidden\" phrases) to get banned:\n\"\n{message.content}\n\""
-            f"\n\nIf you feel you have been wrongly chosen to be banned and kicked, please DM \".chocolate.milk.\" with an appropriate reason; you will be judge by the Moderators/Exec Team of the club.\nThanks")
-
-          await self.process_commands(message)
-
-          return
-        else:
-          print("Nee")
+      return
+    else:
+      print("Nee")
 
 
     await self.process_commands(message) # required! when overriding the on_message() method to process further commands
