@@ -1,4 +1,4 @@
-from shutil import RegistryError
+# from shutil import RegistryError # don't know where this piece of code came from??
 
 import regex as re # used for detecting predictable phrases
 import asyncio
