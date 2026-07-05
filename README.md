@@ -71,6 +71,6 @@ While this was a way better solution (due to the use of RegEx) it still wasn't a
 
 ~~Thus, to help myself **_finish_** the code rather than being with **_unfinished code_** and being zero-tolerant-to-AI-usage: there were moments where I copy-pasted MY code onto ChatGPT and asked about the correctness of the code and/or why it was incorrect, and solutions to it.~~
 
-~~I would've used the solution ideas/code **segments** provided by ChatGPT (and Google's automatically generated AI), BUT I **did not prompt and use generated code from ChatGPT or any other AI model**~~
+~~I would've used the solution ideas/code **segments** provided by ChatGPT (and Google's automatically generated AI), BUT I **did not prompt and use generated code from ChatGPT or any other AI model**~~ (was used for codeV1.py, but not the revised code Jul 1st
 
 Thank you.
