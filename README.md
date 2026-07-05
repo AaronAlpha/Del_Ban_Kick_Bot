@@ -9,7 +9,7 @@ Designed for UofA Computer Engineering (CompE) Club discord server (Jan ~~Feb~~J
 Bot uses '**Render**' as the hosting service and '**UptimeRobot**' monitoring service to allow the bot stay active indefinitely.
 
 ~~(still creating command functionality to allow for an allowable discord member [server owner, admin or other] to specify which channel to label as the 'ban-channel'; for now, because this was deisgned with the CompE Club in mind, message.channel.id has been hard-set)~~ Unrequired for this project, however certain lines of code still exist in the script... for no reason.\*
----
+
 ## Software Dev Analysis
 ### Previous Solutions
 When this project was undertaken and started in Jan \[Jan 17th\] (thanks to a Senior Exec asking me (a Junior Exec) to accomplish the task), the initial plan was to follow an internet idea to enlist one channel (which everbody had access to) of the discord server as a catch-all "fishing net"(honeypot) where active users of the discord server were given a "final warning" to never message in this honeypot-channel. Thus, whoever would message in this channel (knowingly or not) would get a non-reviewable ban (banned by the "Del_Ban_Kick_Bot", known as "Post_Ban-ner" in the server); therefore catching bot accs who would message in the honeypot-channel, due to their automation. However, this solution was quickly made obsolete, for the curated channel was never "hit". 
@@ -39,7 +39,7 @@ While this was a way better solution (due to the use of RegEx) it still wasn't a
 
 #### Phase2: Mathematical Capturing of phrases (the solution - main.py)
 
----
+
 ## References
 - "discord.py API Reference" : **https://discordpy.readthedocs.io/en/stable/api.html**
 - "discord.ext.commands.py API Reference" : **https://discordpy.readthedocs.io/en/stable/ext/commands/api.html***
