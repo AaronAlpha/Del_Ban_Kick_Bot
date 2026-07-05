@@ -62,13 +62,13 @@ While this was a way better solution (due to the use of RegEx) it still wasn't a
     1. ["Host your app 24/7 with Render (Free and Unstable)"-"Gunther"](https://www.youtube.com/watch?v=FVpEDSlGG5k)      (was primary use for setting up the hosting)
     2. ["Host Your Discord Bot For Free In 2024! (Render)"-"Max Codez"](https://www.youtube.com/watch?v=HZis54wRF98)      (was 1 of 2 used for code)
     3. ["How to Host Your Discord Bot for FREE \[Python\]"-"CreepyD"](https://www.youtube.com/watch?v=kBdDmCPcbfs)        (was 1 of 2 used for code)                                            (thingy-mah-jig)
-~~### Ackowledgment of use of ChatGPT
-I would like to say that I don't 'like' ChatGPT (or any other AI model) for cases of breach of Academic Inegrity or misrepresentaiton of work conducted by an individual. 
+~~### Ackowledgment of use of ChatGPT~~
+~~I would like to say that I don't 'like' ChatGPT (or any other AI model) for cases of breach of Academic Inegrity or misrepresentaiton of work conducted by an individual.~~
 
-However, in development of this bot, there were moments where the Documentation and Tutorial Videos were: irrelevant; not enough; vague; unclear on how to use certain code; and many other related feelings of helplessness. 
+~~However, in development of this bot, there were moments where the Documentation and Tutorial Videos were: irrelevant; not enough; vague; unclear on how to use certain code; and many other related feelings of helplessness.~~
 
-Thus, to help myself **_finish_** the code rather than being with **_unfinished code_** and being zero-tolerant-to-AI-usage: there were moments where I copy-pasted MY code onto ChatGPT and asked about the correctness of the code and/or why it was incorrect, and solutions to it.
+~~Thus, to help myself **_finish_** the code rather than being with **_unfinished code_** and being zero-tolerant-to-AI-usage: there were moments where I copy-pasted MY code onto ChatGPT and asked about the correctness of the code and/or why it was incorrect, and solutions to it.~~
 
-I would've used the solution ideas/code **segments** provided by ChatGPT (and Google's automatically generated AI), BUT I **did not prompt and use generated code from ChatGPT or any other AI model**~~*
+~~I would've used the solution ideas/code **segments** provided by ChatGPT (and Google's automatically generated AI), BUT I **did not prompt and use generated code from ChatGPT or any other AI model**~~
 
 Thank you.
