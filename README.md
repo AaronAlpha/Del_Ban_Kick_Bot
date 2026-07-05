@@ -63,6 +63,7 @@ While this was a way better solution (due to the use of RegEx) it still wasn't a
     2. ["Host Your Discord Bot For Free In 2024! (Render)"-"Max Codez"](https://www.youtube.com/watch?v=HZis54wRF98)      (was 1 of 2 used for code)
     3. ["How to Host Your Discord Bot for FREE \[Python\]"-"CreepyD"](https://www.youtube.com/watch?v=kBdDmCPcbfs)        (was 1 of 2 used for code)                                            (thingy-mah-jig)
 
+
 ~~### Ackowledgment of use of ChatGPT~~
 ~~I would like to say that I don't 'like' ChatGPT (or any other AI model) for cases of breach of Academic Inegrity or misrepresentaiton of work conducted by an individual.~~
 
