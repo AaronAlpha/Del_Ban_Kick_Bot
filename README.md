@@ -8,7 +8,7 @@ Bot uses '**Render**' as the hosting service and '**UptimeRobot**' monitoring se
 
 ## Software Dev Analysis
 
-TLDR:
+TLDR ("Previous Solutions"):
 1) Solution1 attempted to designate one channel to ban all those in question (honeypot idea) --> this failed because the BotAcc messages were not sent to all channels in a server but only a few ones.
 2) Solution2 and Solution3 attempted to perform string-analysis to determine if a message contained certain BotAcc phrases --> this failed because "@everyone" is not the same as "everyone" - it's just how python strings work
 3) Due to the way python strings work, **RegEx** had to be used
@@ -31,6 +31,11 @@ A further attempt was made to include as many "permutations and combinations" of
 
 ==It was clear; that what I was trying to do in solutionV2 and solutionV3, was but escaping a python-module that was designed to do exactly what I was trying to recreate through naive solutions. To be frank, I was intimidated by its reputation, and by how long it would take to learn.==
 
+
+TLDR ("The Solution"):
+1) The "Phase 1" solution attempted to create a "one size fits all" string that would capture ALL BotAcc messages --> this failed because although there were repetitive/distinguishable phrases, there were also subtle differences that prevented detection
+2) The "Phase 2" solution used math to check a sent discord-message contained 3 or more phrases from a predefined "list of phrases" (python list of lists of string); this was to protect human-user messages if they contained phrases that were in the "list of phrases", and to also solve the "common phrases yet subtle differences challenge from 'Phase 1'".
+3) Contacting the UofA CompE Club is an added form of protection to human-users if they were wrongly banned.
 
 ### The Solution
 **RegEx** (Regular Expressions) are "\[sequences\] of characters that \[specify\] a pattern in any given text". (Not as bad as its reputation precedes it - at least in this context)
