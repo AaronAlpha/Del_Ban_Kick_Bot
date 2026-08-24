@@ -45,11 +45,13 @@ If the message contains a phrase that is RegEx-equivalent to the RegEx-phrase in
 
 This decision was to take into account that a discord-message sent out wouldn't contain all the phrases from a typical BotAcc message, but if it was a BotAcc message, that it would contain **AT LEAST 3 or more phrases from this "phraseList" (list of lists of string)**. 
 But seeing as how these BotAcc messages were meant to simulate human-behaviour, in communication, a normal human being may have typed something that could exist in this "list of BotAcc phrases" (phraseList), and so **to take account of this as well, we intentionally maintain a "threshold" that must be passed for a message to be deemed a BotAcc-message**.
+
 Of course, this is not full-proof:
 1) BotAcc messages may evolve to the point where the current implementation of the "phraseList" would have to change in the future (or the general solution-implementation would have to change)
 2) It is possible that even with the safe procedure of 30% or more achievement to be deemed a BotAcc, a human-user may still get "caught in the crossfire"
 
-The solution to "protect" the human-users, is to provide them a contact from within the exec-team of the UofA CompE Club (for which this bot was designed for) so that they may plead their case of a false-ban and kick, and to be allowed back into the server, for their message was incorrectly judged by the Bot (a copy of the message would be sent to the user in question). A copy of the message would also exist in the modlogs of the discord server, so even if a banned user pleas guilty (but tampers their message), the discord server would contain the message that got the user banned.
+The solution to "protect" the human-users, is to provide them a contact from within the exec-team of the UofA CompE Club (for which this bot was designed for) so that they may plead their case of a false-ban and kick, and to be allowed back into the server, for their message was incorrectly judged by the Bot (a copy of the message would be sent to the user in question). 
+A copy of the message would also exist in the modlogs of the discord server, so even if a banned user pleas guilty (but tampers their message when pleading a case to the exec team), the discord server would contain the message that got the user banned.
 
 ---
 
