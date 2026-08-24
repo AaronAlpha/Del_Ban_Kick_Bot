@@ -7,6 +7,12 @@ Designed for UofA Computer Engineering (CompE) Club discord server (Jan ~~Feb~~J
 Bot uses '**Render**' as the hosting service and '**UptimeRobot**' monitoring service to allow the bot stay active indefinitely.
 
 ## Software Dev Analysis
+
+TLDR:
+1) Solution1 attempted to designate one channel to ban all those in question (honeypot idea) --> this failed because the BotAcc messages were not sent to all channels in a server but only a few ones.
+2) Solution2 and Solution3 attempted to perform string-analysis to determine if a message contained certain BotAcc phrases --> this failed because "@everyone" is not the same as "everyone" - it's just how python strings work
+3) Due to the way python strings work, **RegEx** had to be used
+
 ### Previous Solutions
 When this project was undertaken and started in Jan \[Jan 17th\] (thanks to a Senior Exec requesting me to accomplish a task), the initial plan was to follow an internet idea to enlist one channel (which everbody had access to) of the discord server as a catch-all "fishing net"(honeypot) where active users of the discord server were given a "final warning" to never message in this honeypot-channel. Thus, whoever would message in this channel (knowingly or not) would get a non-reviewable ban (banned by the "Del_Ban_Kick_Bot", known as "Post_Ban-ner" in the server); therefore catching bot accs who would message in the honeypot-channel, due to their automation. However, this solution was quickly made obsolete, for the curated channel was never "hit". 
 Bot acc spamming continuined, but never did messages enter the intended channel. Why?
