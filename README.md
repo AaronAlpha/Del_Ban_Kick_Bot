@@ -32,6 +32,8 @@ A further attempt was made to include as many "permutations and combinations" of
 ==It was clear; that what I was trying to do in solutionV2 and solutionV3, was but escaping a python-module that was designed to do exactly what I was trying to recreate through naive solutions. To be frank, I was intimidated by its reputation, and by how long it would take to learn.==
 
 
+
+
 TLDR ("The Solution"):
 1) The "Phase 1" solution attempted to create a "one size fits all" string that would capture ALL BotAcc messages --> this failed because although there were repetitive/distinguishable phrases, there were also subtle differences that prevented detection
 2) The "Phase 2" solution used math to check a sent discord-message contained 3 or more phrases from a predefined "list of phrases" (python list of lists of string); this was to protect human-user messages if they contained phrases that were in the "list of phrases", and to also solve the "common phrases yet subtle differences challenge from 'Phase 1'".
