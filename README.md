@@ -6,6 +6,8 @@ Designed for UofA Computer Engineering (CompE) Club discord server (Jan ~~Feb~~J
 
 Bot uses '**Render**' as the hosting service and '**UptimeRobot**' monitoring service to allow the bot stay active indefinitely.
 
+---
+
 ## Software Dev Analysis
 
 TLDR ("Previous Solutions"):
